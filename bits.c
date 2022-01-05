@@ -144,7 +144,13 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  // x는 0, y는 1을 가지고 있는 패턴을 추출한다. 
+  int pattern01 = ~x & y;
+  // x는 1, y는 0을 가지고 있는 패턴을 추출한다.
+  int pattern10 = x & ~y;
+  // pattern01과 pattern10의 or연산이다.
+  int ans = ~(~pattern01 & ~pattern10);
+  return ans;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -153,9 +159,9 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
-
+  // 1000...0의 형태로 만들기
+  int ans = 1 << 31;
+  return ans;
 }
 //2
 /*
@@ -166,7 +172,11 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return 2;
+  // Tmax(0111...1) 만들기
+  int Tmax = ~(1 << 31);
+  // x와 비교하기. 완전히 일치한다면 !(000...0) == 1의 형태로 나타날것
+  int ans = !(Tmax ^ x);
+  return ans;
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -177,7 +187,21 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  return 2;
+  /*
+  아래 답안보다 연산자 수가 많아서 주석으로 남겨두는 답안입니다.
+  //반으로 계속 접어가면서 홀수 자리를 비교합니다.
+  int ban1 = x & (x >> 16);
+  int ban2 = ban1 & (ban1 >> 8);
+  int ban3 = ban2 & (ban2 >> 4);
+  int ban4 = ban3 & (ban3 >> 2);
+  // 다 접었다면 1번 비트가 1이여야 allOddBits 입니다.
+  int ans = 1 & (ban4 >> 1);
+  */
+  // 1010...10 만들기
+  int allOddBitNumber = (0xAA << 24) + (0xAA << 16) + (0xAA << 8) + 0xAA;
+  // 1010...10 & x == 1010...10
+  int ans = !((allOddBitNumber & x) ^ allOddBitNumber);
+  return ans;
 }
 /* 
  * negate - return -x 
@@ -187,7 +211,9 @@ int allOddBits(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  // two's complement 기본 원리
+  int ans = ~x + 1;
+  return ans;
 }
 //3
 /* 

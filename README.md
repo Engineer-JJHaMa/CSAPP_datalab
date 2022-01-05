@@ -10,3 +10,6 @@
 프로젝트 생성, 깃 공부를 했습니다.
 ### 2021-01-04
 README 읽어보고, README.md 생성했습니다.
+### 2021-01-05
+문제풀이를 시작했습니다.
+bitXor, tmin, isTmax, allOddBits, negate 까지 풀이했습니다.
