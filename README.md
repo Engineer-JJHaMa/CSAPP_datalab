@@ -13,3 +13,7 @@ README 읽어보고, README.md 생성했습니다.
 ### 2021-01-05
 문제풀이를 시작했습니다.
 bitXor, tmin, isTmax, allOddBits, negate 까지 풀이했습니다.
+### 2021-01-06
+isAsciiDigit, conditional 풀이했고, isTmax 수정했습니다.
+### 2021-01-08
+logicalNeg 풀이했고, howManyBits 미완입니다.

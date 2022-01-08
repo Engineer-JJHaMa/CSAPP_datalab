@@ -172,10 +172,13 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  // Tmax(0111...1) 만들기
-  int Tmax = ~(1 << 31);
-  // x와 비교하기. 완전히 일치한다면 !(000...0) == 1의 형태로 나타날것
-  int ans = !(Tmax ^ x);
+  //Tmax + Tmin + 1 = 0
+  //Tmin = Tmax + 1
+  //Tmax + Tmax + 2 = 0
+  int zero = x + x + 2;
+  //바로 !zero가 답이 아닐수도 있다. -1(111...1)을 예외처리 해야한다.
+  //& 우항은 x가 -1일경우 0이나온다(나머지 경우에는 1).
+  int ans = !zero & !(!(~x));
   return ans;
 }
 /* 
@@ -226,7 +229,11 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int NEG = 1 << 31;
+  int isBiggerThen0 = !((x + ~0x30 + 1) & NEG);
+  int isSmallerThen9 = !((0x39 + ~x + 1) & NEG);
+  int ans = isBiggerThen0 & isSmallerThen9;
+  return ans;
 }
 /* 
  * conditional - same as x ? y : z 
@@ -236,7 +243,11 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  // x값이 0이아니면 11...1, 0이면 00...0이 된다.
+  int isxtrue = ((!(!x)) << 31) >> 31;
+  // isxtrue값에 따라 y(11...1일 경우) 또는 z(00...0일 경우) 중 한가지 값만 나온다.
+  int ans = (y & isxtrue) | (z & ~isxtrue);
+  return ans;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -246,6 +257,16 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
+  /*미완성
+  int NEG = 1 << 31;
+  // y - x >= 0
+  int yMinusx = y + ~x + 1;
+  // 예외 케이스 x == NEG
+  int isxEqualToNEG = !(x^NEG);
+  int isyEqualToNEG
+  int ans = (!(yMinusx & NEG)) | isEqualToNEG;
+  return ans;
+  */
   return 2;
 }
 //4
@@ -258,7 +279,20 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  /*
+  잘 안작동하기도 하고 연산도 많은 답안. 0x80000000 넣으면 2가 나오는 이유가 뭘까?
+  // 비트 중 1이 하나라도 있으면 ban5의 0번째 비트값은 1이 된다.
+  int ban1 = x | (x >> 16);
+  int ban2 = ban1 | (ban1 >> 8);
+  int ban3 = ban2 | (ban2 >> 4);
+  int ban4 = ban3 | (ban3 >> 2);
+  int ban5 = ban4 | (ban4 >> 1);
+  // ban5의 0번째 비트값이 1이면 ans를 0으로 만들어야 한다.
+  int ans = (ban5 & 1) ^ 1;
+  */
+  // 솔직히 인터넷에서 봤다. 0이 아니라면 x와 -x 둘 중 하나는 부호 비트가 1인 점을 이용.
+  int ans = ((x | (~x + 1)) >> 31) + 1;
+  return ans;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -273,7 +307,21 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  // 일단 x의 부호부터 판별해야 할 것 같다.
+  int b16, b8, b4, b2, ans;
+  int sign = x >> 31;
+  // x가 양수면 그대로, x가 음수면 -x로 바꾸기
+  x = (~sign & x) | (sign & (~x + 1));
+  b16 = (!!(x >> 16)) << 4;
+  x = x >> b16;
+  b8 = (!!(x >> 8)) << 3;
+  x = x >> b8;
+  b4 = (!!(x >> 4)) << 2;
+  x = x >> b4;
+  b2 = (!!(x >> 2)) << 1;
+  x = x >> b2;
+  ans = b16 + b8 + b4 + b2 + (x >> 1) + 1;
+  return ans;
 }
 //float
 /* 
