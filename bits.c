@@ -257,17 +257,14 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  /*미완성
   int NEG = 1 << 31;
   // y - x >= 0
   int yMinusx = y + ~x + 1;
   // 예외 케이스 x == NEG
-  int isxEqualToNEG = !(x^NEG);
-  int isyEqualToNEG
-  int ans = (!(yMinusx & NEG)) | isEqualToNEG;
+  int signX = x >> 31;
+  int signY = y >> 31;
+  int ans = (!(yMinusx & NEG)) & (signX & ~signY);
   return ans;
-  */
-  return 2;
 }
 //4
 /* 
@@ -307,11 +304,13 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
+  // 반은 검색, 반은 자력으로 했다.
   // 일단 x의 부호부터 판별해야 할 것 같다.
-  int b16, b8, b4, b2, ans;
+  int b16, b8, b4, b2, b1, ans;
   int sign = x >> 31;
   // x가 양수면 그대로, x가 음수면 -x로 바꾸기
-  x = (~sign & x) | (sign & (~x + 1));
+  x = (~sign & x) | (sign & ~x);
+  // 반씩 줄여나가면서 사용하는 비트의 범위를 파악한다.
   b16 = (!!(x >> 16)) << 4;
   x = x >> b16;
   b8 = (!!(x >> 8)) << 3;
@@ -320,7 +319,9 @@ int howManyBits(int x) {
   x = x >> b4;
   b2 = (!!(x >> 2)) << 1;
   x = x >> b2;
-  ans = b16 + b8 + b4 + b2 + (x >> 1) + 1;
+  b1 = !!(x >> 1);
+  x = x >> b1;
+  ans = b16 + b8 + b4 + b2 + b1 + x + 1;
   return ans;
 }
 //float
