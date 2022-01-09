@@ -17,3 +17,5 @@ bitXor, tmin, isTmax, allOddBits, negate 까지 풀이했습니다.
 isAsciiDigit, conditional 풀이했고, isTmax 수정했습니다.
 ### 2021-01-08
 logicalNeg 풀이했고, howManyBits 미완입니다.
+### 2021-01-09
+howManyBits 풀이했고, isLessOrEqual 미완입니다.
