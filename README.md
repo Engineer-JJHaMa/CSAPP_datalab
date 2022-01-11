@@ -19,3 +19,5 @@ isAsciiDigit, conditional 풀이했고, isTmax 수정했습니다.
 logicalNeg 풀이했고, howManyBits 미완입니다.
 ### 2021-01-09
 howManyBits 풀이했고, isLessOrEqual 미완입니다.
+### 2021-01-11
+int 파트 완료했습니다.
