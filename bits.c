@@ -257,13 +257,9 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int NEG = 1 << 31;
-  // y - x >= 0
-  int yMinusx = y + ~x + 1;
-  // 예외 케이스 x == NEG
   int signX = x >> 31;
   int signY = y >> 31;
-  int ans = (!(yMinusx & NEG)) & (signX & ~signY);
+  int ans = (signX & !signY) | (!(signX ^ signY) & !((y + ~x + 1) >> 31));
   return ans;
 }
 //4
@@ -337,7 +333,18 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+  unsigned NEG, e, s, ans;
+  NEG = 1u << 31;
+  e = uf >> 23;
+  s = uf & NEG;
+  if((uf >> 7) & 1){
+    ans = uf;
+  }
+  else {
+    e = e << 1;
+    ans = (uf | (e << 23)) ^ s;
+  }
+  return ans;
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
