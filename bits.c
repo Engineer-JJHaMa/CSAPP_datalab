@@ -333,16 +333,41 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  unsigned NEG, e, s, ans;
-  NEG = 1u << 31;
-  e = uf >> 23;
-  s = uf & NEG;
-  if((uf >> 7) & 1){
-    ans = uf;
+  unsigned sign, exp, signMask, expMask, ans;
+  signMask = 1u << 31;
+  expMask = 0xffu << 23;
+  sign = uf & signMask;
+  exp = uf & expMask;
+  
+  if(exp ^ expMask) {
+    // Noramalized
+    if(exp) {
+      // increase exp
+      exp = exp + (1u << 23);
+      // not inf case
+      if(exp ^ expMask) {
+        ans = (uf & ~expMask) | exp; 
+      }
+      // inf case
+      else {
+        ans = exp | sign;
+      }
+    }
+    // Denormalized
+    else {
+      // Not Zero
+      if(uf & ~sign) {
+        ans = (uf << 1) | sign;
+      }
+      // Zero
+      else {
+        ans = uf;
+      }
+    }
   }
+  // Infinity or NaN
   else {
-    e = e << 1;
-    ans = (uf | (e << 23)) ^ s;
+    ans = uf;
   }
   return ans;
 }
