@@ -384,7 +384,57 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
+  /*
+  //Rounding 갱각 안해도 되는 거였구나 으어아ㅏㅏㅏㅏㅏㅏㅏ
+  int sign, exp, frac, outOfRange, fracWithMarker, roundPart, roundPointer, valueBeforeRound, howToRound;
+  sign = uf >> 31;
+  exp = ((uf >> 23) & 0xff) - 127;
+  frac = (uf << 9) >> 9;
+  outOfRange = 1 << 31;
+  fracWithMarker = frac | (1 << 23);
+  
+  if(exp >= 31) return outOfRange;
+  if(exp < -1) return 0;
+  if(exp == -1) {
+    if(frac < (1 << 22)) return 0;
+    else return 1;
+  }
+  
+  roundPointer = exp - 23;
+  if(roundPointer >= 0) return fracWithMarker << roundPointer;
+  roundPart = frac & ~(outOfRange >> (exp + 8));
+  roundPointer = roundPointer * -1;
+  valueBeforeRound = fracWithMarker >> roundPointer;
+  howToRound = roundPart - (1 << roundPointer);
+  if(howToRound < 0) {
+    if(sign) return valueBeforeRound * -1;
+    return valueBeforeRound;
+  }
+  valueBeforeRound += 1;
+  if(howToRound > 0) {
+    if(sign) return valueBeforeRound * -1;
+    return valueBeforeRound;
+  }
+  
   return 2;
+  */
+  int e = ((uf >> 23) & 0xff)-127;
+  int sign = uf >> 31;
+  int M = (uf&0x007fffff)|0x00800000;
+  if(!(uf&0x7fffffff)) return 0; // 0
+  if(e < 0) return 0; // 0.***
+  if(e > 31) return 0x80000000; // overflow
+  if(!(uf & 0x7fffffff)) return 0; // 0
+  if(e > 23) 
+    M <<= (e - 23);
+  else 
+    M >>= (23 - e);
+
+  if(!((M >> 31) ^ sign)) // +
+    return M;
+  else if(M >> 31) // overflow
+    return 0x80000000;
+  return ~M + 1; // -
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x

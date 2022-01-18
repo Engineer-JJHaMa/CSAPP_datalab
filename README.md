@@ -21,3 +21,10 @@ logicalNeg 풀이했고, howManyBits 미완입니다.
 howManyBits 풀이했고, isLessOrEqual 미완입니다.
 ### 2021-01-11
 int 파트 완료했습니다.
+### 2021-01-15
+floatScale2 완성했습니다. 인터넷에 다른 사람의 풀이를 검색하여 비교해봤는데,
+누구의 방식이 나은지 잘 모르겠는 기분입니다.
+### 2021-01-17
+floatFloat2Int 미완입니다.
+### 2021-01-18
+floatFloat2Int 연산자 수를 못맞춰서 구글링을 했는데, Rounding이 필요가 없었나 봅니다.
