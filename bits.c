@@ -450,5 +450,17 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+  unsigned INF, exp, frac;
+  INF = 0xffu << 23;
+  if(x > 127) return INF;
+  if(x >= -126) {
+    exp = x + 127;
+    return exp << 23;
+  }
+  if(x >= -149) {
+    exp = 0u;
+    frac = 1u << (149 + x);
+    return (exp << 23) | frac;
+  }
+  return 0u;
 }
